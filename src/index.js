@@ -18,6 +18,8 @@ io.on("connection", () => {
 app.get("/", (req, res) => {
   res.send("hello world");
 });
-app.listen(port, () => {
+
+// Use the server instance to listen on the specified port
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
