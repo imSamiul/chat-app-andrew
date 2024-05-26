@@ -1,0 +1,9 @@
+{
+  "extends": ["airbnb", "prettier", "plugin:node/recommended"],
+  "plugins": ["prettier"],
+  "rules": { "no-console": "off" },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

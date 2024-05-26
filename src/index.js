@@ -1,22 +1,34 @@
-const express = require("express");
-const path = require("path");
-const http = require("http");
-const socketIo = require("socket.io");
+const express = require('express');
+const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+// server (emit) ---- will go to ---> client (receive) - countUpdated
+// client (emit) ---- will go to ---> server (receive) - increment
 const port = process.env.PORT || 4000;
-const publicDirectoryPath = path.join(__dirname, "../public");
+const publicDirectoryPath = path.join(__dirname, '../public');
 app.use(express.static(publicDirectoryPath));
 
-io.on("connection", () => {
-  console.log("New websocket connection");
+// let count = 0;
+
+io.on('connection', (socket) => {
+  // socket.emit('countUpdated', count);
+  // socket.on('increment', () => {
+  //   count += 1;
+  //   io.emit('countUpdated', count);
+  // });
+  socket.emit('message', 'welcome');
+  socket.on('sendMessage', (message) => {
+    io.emit('message', message);
+  });
 });
 
-app.get("/", (req, res) => {
-  res.send("hello world");
+app.get('/', (req, res) => {
+  res.send('hello world');
 });
 
 // Use the server instance to listen on the specified port
