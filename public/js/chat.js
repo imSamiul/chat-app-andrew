@@ -21,6 +21,17 @@ socket.on('message', (message) => {
   $messages.insertAdjacentHTML('beforeend', html);
 });
 
+const locationMessageTemplate = document.querySelector(
+  '#location-message-template',
+).innerHTML;
+socket.on('locationMessage', (url) => {
+  console.log(url);
+  const html = Mustache.render(locationMessageTemplate, {
+    url,
+  });
+  $messages.insertAdjacentHTML('beforeend', html);
+});
+
 $messageForm.addEventListener('submit', (e) => {
   const text = e.target.elements.message.value;
   $messageFormButton.setAttribute('disabled', 'disabled');

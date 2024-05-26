@@ -22,7 +22,10 @@ io.on('connection', (socket) => {
   //   count += 1;
   //   io.emit('countUpdated', count);
   // });
-  socket.emit('message', 'welcome');
+  socket.emit('message', {
+    text: 'welcome',
+    createdAt: new Date().getTime(),
+  });
   socket.broadcast.emit('message', 'A new user has joined');
   socket.on('sendMessage', (text, callback) => {
     const filter = new Filter();
@@ -33,7 +36,10 @@ io.on('connection', (socket) => {
     callback();
   });
   socket.on('sendLocation', (location, callback) => {
-    socket.broadcast.emit('message', location);
+    io.emit(
+      'locationMessage',
+      `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`,
+    );
     callback();
   });
   socket.on('disconnect', () => {
