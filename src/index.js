@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
+const Filter = require('bad-words');
 
 const app = express();
 const server = http.createServer(app);
@@ -16,19 +17,24 @@ app.use(express.static(publicDirectoryPath));
 // let count = 0;
 
 io.on('connection', (socket) => {
-  // socket.emit('countUpdated', count);
+  // socket.emit('countUpdate d', count);
   // socket.on('increment', () => {
   //   count += 1;
   //   io.emit('countUpdated', count);
   // });
   socket.emit('message', 'welcome');
   socket.broadcast.emit('message', 'A new user has joined');
-  socket.on('sendMessage', (message) => {
-    io.emit('message', message);
+  socket.on('sendMessage', (text, callback) => {
+    const filter = new Filter();
+    if (filter.isProfane(text)) {
+      return callback('Profanity is not allowed');
+    }
+    io.emit('message', text);
+    callback();
   });
-  socket.on('sendLocation', (location) => {
-    console.log(location);
+  socket.on('sendLocation', (location, callback) => {
     socket.broadcast.emit('message', location);
+    callback();
   });
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left');
