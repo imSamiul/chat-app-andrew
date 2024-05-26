@@ -22,8 +22,16 @@ io.on('connection', (socket) => {
   //   io.emit('countUpdated', count);
   // });
   socket.emit('message', 'welcome');
+  socket.broadcast.emit('message', 'A new user has joined');
   socket.on('sendMessage', (message) => {
     io.emit('message', message);
+  });
+  socket.on('sendLocation', (location) => {
+    console.log(location);
+    socket.broadcast.emit('message', location);
+  });
+  socket.on('disconnect', () => {
+    io.emit('message', 'A user has left');
   });
 });
 

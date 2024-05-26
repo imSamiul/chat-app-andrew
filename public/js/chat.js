@@ -16,3 +16,15 @@ textForm.addEventListener('submit', (e) => {
   e.preventDefault();
   socket.emit('sendMessage', text);
 });
+
+document.querySelector('.send-location').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!navigator.geolocation) {
+    console.log('Geolocation is not supported by your browser');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition((position) => {
+    const { latitude, longitude } = position.coords;
+    socket.emit('sendLocation', { latitude, longitude });
+  });
+});
